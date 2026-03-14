@@ -73,7 +73,7 @@ const verifyPayment = async (req, res, next) => {
       customer,
       items,
       total,
-      status: "Confirmed", // already paid — skip "Placed"
+      status: "Placed", // payment received — admin reviews and confirms
       paymentId: razorpay_payment_id,
       razorpayOrderId: razorpay_order_id,
     });
