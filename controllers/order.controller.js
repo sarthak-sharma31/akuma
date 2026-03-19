@@ -128,7 +128,46 @@ const updateOrderStatus = async (req, res, next) => {
 module.exports = {
   placeOrder,
   trackOrder,
+  updateCustomerDetails,
   getAllOrders,
   getOrderById,
   updateOrderStatus,
+};
+
+/**
+ * @desc  Update customer details (only allowed when status is "Placed")
+ * @route PATCH /api/orders/update-details
+ */
+const updateCustomerDetails = async (req, res, next) => {
+  try {
+    const { orderId, email, name, phone, address } = req.body;
+
+    if (!orderId || !email) {
+      return sendError(res, 400, "Order ID and email are required");
+    }
+
+    const order = await Order.findOne({
+      orderId: orderId.trim().toUpperCase(),
+      "customer.email": email.trim().toLowerCase(),
+    });
+
+    if (!order) {
+      return sendError(res, 404, "Order not found. Check your Order ID and email.");
+    }
+
+    if (order.status !== "Placed") {
+      return sendError(res, 403, `Cannot edit details — order is already ${order.status}. Contact us at akumafits@gmail.com`);
+    }
+
+    // Only update fields that were provided
+    if (name)    order.customer.name    = name.trim();
+    if (phone)   order.customer.phone   = phone.trim();
+    if (address) order.customer.address = address.trim();
+
+    await order.save();
+
+    sendSuccess(res, 200, { order, message: "Details updated successfully!" });
+  } catch (err) {
+    next(err);
+  }
 };
