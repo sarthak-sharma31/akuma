@@ -8,6 +8,7 @@ const productRoutes = require("./routes/product.routes");
 const adminRoutes = require("./routes/admin.routes");
 const orderRoutes = require("./routes/order.routes");
 const paymentRoutes = require("./routes/payment.routes");
+const reviewRoutes = require("./routes/review.routes");
 const notFound = require("./middleware/notFound");
 const errorHandler = require("./middleware/errorHandler");
 
@@ -34,6 +35,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // ── Error Handling (must be last) ──
 app.use(notFound);
