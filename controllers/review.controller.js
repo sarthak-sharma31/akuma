@@ -31,12 +31,14 @@ const submitReview = async (req, res, next) => {
       return sendError(res, 403, "We could not verify your order. Please check your Order ID and email.");
     }
 
-    // Check product is in the order
-    const hasProduct = order.items.some(
-      (item) => item.productId && item.productId.toString() === productId
-    );
+    // Check product is in the order — compare as strings to handle ObjectId vs string mismatch
+    const hasProduct = order.items.some((item) => {
+      if (!item.productId) return false;
+      return item.productId.toString() === productId.toString();
+    });
+
     if (!hasProduct) {
-      return sendError(res, 403, "This product was not found in your order.");
+      return sendError(res, 403, "This product was not found in your order. Make sure you are reviewing a product you actually ordered.");
     }
 
     // Check for duplicate
