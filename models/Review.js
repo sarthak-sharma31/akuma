@@ -7,7 +7,9 @@ const reviewSchema = new mongoose.Schema(
     reviewerEmail: { type: String, trim: true, lowercase: true, default: "" },
     rating: { type: Number, required: true, min: 1, max: 5 },
     comment: { type: String, trim: true, default: "" },
-    image: { type: String, default: "" },
+    images: { type: [String], default: [] }, // up to 3 images
+    image: { type: String, default: "" },  // kept for backward compat
+    images: { type: [String], default: [] }, // legacy single image support
     verified: { type: Boolean, default: true },
     approved: { type: Boolean, default: true },
   },

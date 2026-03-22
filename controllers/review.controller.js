@@ -14,7 +14,7 @@ const getReviews = async (req, res, next) => {
 const submitReview = async (req, res, next) => {
   try {
     const Order = require("../models/Order");
-    const { productId, orderId, email, reviewerName, rating, comment, image } = req.body;
+    const { productId, orderId, email, reviewerName, rating, comment, image, images } = req.body;
 
     if (!productId || !orderId || !email || !reviewerName || !rating) {
       return sendError(res, 400, "productId, orderId, email, reviewerName and rating are required");
@@ -53,7 +53,9 @@ const submitReview = async (req, res, next) => {
       reviewerEmail: email.trim().toLowerCase(),
       rating: Number(rating),
       comment: comment || "",
-      image: image || "",
+      images: Array.isArray(images) ? images.filter(Boolean).slice(0, 3) : [],
+      image: (images && images[0]) || image || "",
+      images: images || [],
       verified: true,
       approved: true,
     });
@@ -76,11 +78,11 @@ const getAdminReviews = async (req, res, next) => {
 
 const createReview = async (req, res, next) => {
   try {
-    const { productId, reviewerName, rating, comment, image, verified } = req.body;
+    const { productId, reviewerName, rating, comment, image, images, verified } = req.body;
     if (!productId || !reviewerName || !rating) {
       return sendError(res, 400, "productId, reviewerName and rating are required");
     }
-    const review = await Review.create({ productId, reviewerName, rating, comment, image, verified, approved: true });
+    const review = await Review.create({ productId, reviewerName, rating, comment, images: Array.isArray(images) ? images.filter(Boolean).slice(0, 3) : [], image: image || "", verified, approved: true });
     sendSuccess(res, 201, { review });
   } catch (err) { next(err); }
 };
