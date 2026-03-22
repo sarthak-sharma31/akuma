@@ -55,7 +55,7 @@ const submitReview = async (req, res, next) => {
       comment: comment || "",
       image: image || "",
       verified: true,
-      approved: false,
+      approved: true,
     });
 
     sendSuccess(res, 201, { message: "Review submitted! It will appear after we approve it." });

@@ -9,7 +9,7 @@ const reviewSchema = new mongoose.Schema(
     comment: { type: String, trim: true, default: "" },
     image: { type: String, default: "" },
     verified: { type: Boolean, default: true },
-    approved: { type: Boolean, default: true }, // admin-added = auto approved, customer-submitted = needs approval
+    approved: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
